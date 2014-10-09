@@ -13,6 +13,6 @@ namespace WindowsPhoneToastNotifications
 {
     public abstract class ToastNotificationBase
     {
-
+        public string Id { get; set; }
     }
 }
