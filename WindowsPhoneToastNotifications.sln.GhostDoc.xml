@@ -10,7 +10,6 @@
 <HelpConfigurations selected="HelpFile">
   <HelpConfiguration name="HelpFile">
     <OutputPath>.\Help</OutputPath>
-    <HelpFileName>WindowsPhoneToastNotifications</HelpFileName>
     <ImageFolderPath />
     <HtmlFormats>
       <HtmlHelp>true</HtmlHelp>

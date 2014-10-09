@@ -11,7 +11,7 @@ using System.Windows.Shapes;
 
 namespace WindowsPhoneToastNotifications
 {
-    public class Class1
+    public abstract class ToastNotificationBase
     {
 
     }
