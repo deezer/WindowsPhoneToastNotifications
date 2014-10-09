@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Net;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,6 +12,7 @@ using System.Windows.Shapes;
 
 namespace WindowsPhoneToastNotifications
 {
+    [DebuggerDisplay("ToastNotificationBase({Id})")]
     public abstract class ToastNotificationBase
     {
         public string Id { get; set; }

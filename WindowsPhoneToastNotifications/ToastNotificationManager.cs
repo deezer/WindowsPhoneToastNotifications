@@ -42,12 +42,19 @@ namespace WindowsPhoneToastNotifications
         {
             // If the toastNotification is on screen, replace datacontext
             // TODO: Implement live notification swapping
-
+            
             // else-if notification is on queue, replace existing instance
-
-
-            // else add to queue
-            InternalAddToQueue(toastNotification);
+            if (_notificationsQueue.Any(notification => notification.Id == toastNotification.Id && notification.Id != null))
+            {
+                InternalReplaceQueueItem(toastNotification);
+            }
+            else
+            {
+                // else add to queue
+                InternalAddToQueue(toastNotification);
+            }
+            
+            // TODO: Process queue
         }
 
         /// <summary>
@@ -76,6 +83,24 @@ namespace WindowsPhoneToastNotifications
             {
                 _notificationsQueue.Add(toastNotification);
             }
+        }
+
+        private void InternalReplaceQueueItem(ToastNotificationBase toastNotification)
+        {
+            lock (_notificationQueueLock)
+            {
+                ToastNotificationBase actualNotification = _notificationsQueue.FirstOrDefault(notification => notification.Id == toastNotification.Id && notification.Id != null);
+                if (actualNotification == null) throw new ArgumentNullException("actualNotification");
+
+                var actualNotificationIndex = _notificationsQueue.IndexOf(actualNotification);
+                _notificationsQueue.Remove(actualNotification);
+                _notificationsQueue.Insert(actualNotificationIndex, toastNotification);
+            }
+        }
+
+        public ToastNotificationBase GetToastById(string toastId)
+        {
+            return _notificationsQueue.FirstOrDefault(notification => notification.Id == toastId);
         }
     }
 }
