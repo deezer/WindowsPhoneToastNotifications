@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows.Controls;
 
-namespace WindowsPhoneToastNotifications
+namespace Deezer.WindowsPhone.UI
 {
     public class ToastNotificationManager
     {

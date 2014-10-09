@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WindowsPhoneToastNotifications
+namespace Deezer.WindowsPhone.UI
 {
     public class SimpleToastNotification : ToastNotificationBase
     {

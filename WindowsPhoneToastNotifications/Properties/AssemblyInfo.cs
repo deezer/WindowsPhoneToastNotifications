@@ -9,9 +9,9 @@ using System.Resources;
 [assembly: AssemblyTitle("WindowsPhoneToastNotifications")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Deezer")]
 [assembly: AssemblyProduct("WindowsPhoneToastNotifications")]
-[assembly: AssemblyCopyright("Copyright ©  2014")]
+[assembly: AssemblyCopyright("Copyright © 2014 Deezer - Christopher MANEU")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

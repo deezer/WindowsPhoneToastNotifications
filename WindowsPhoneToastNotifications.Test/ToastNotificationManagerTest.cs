@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using Windows.UI.Core;
+using Deezer.WindowsPhone.UI;
 using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 
 namespace WindowsPhoneToastNotifications.Test
