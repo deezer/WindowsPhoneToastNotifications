@@ -61,7 +61,6 @@ namespace WindowsPhoneToastNotifications.Test
             });
         }
 
-
         [TestMethod]
         public async Task ToastNotificationManagerTest_Enqueue_ShouldBeTheLastItem()
         {

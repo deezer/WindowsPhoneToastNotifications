@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace Deezer.WindowsPhone.UI
 {
@@ -10,6 +12,7 @@ namespace Deezer.WindowsPhone.UI
     {
         private List<ToastNotificationBase> _notificationsQueue;
         private object _notificationQueueLock = new object();
+        private Border _toastControlMainBorder;
 
         public IReadOnlyList<ToastNotificationBase> QueuedNotifications
         {
@@ -17,6 +20,8 @@ namespace Deezer.WindowsPhone.UI
         }
 
         public Grid RootGrid { get; protected set; }
+
+        public ToastNotificationBase CurrentNotification { get; protected set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ToastNotificationManager"/> class.
@@ -55,6 +60,10 @@ namespace Deezer.WindowsPhone.UI
             }
             
             // TODO: Process queue
+            if (CurrentNotification == null)
+            {
+                ShowNextNotification();
+            }
         }
 
         /// <summary>
@@ -67,6 +76,15 @@ namespace Deezer.WindowsPhone.UI
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Gets the toast by identifier.
+        /// </summary>
+        /// <param name="toastId">The toast identifier.</param>
+        /// <returns>ToastNotificationBase.</returns>
+        public ToastNotificationBase GetToastById(string toastId)
+        {
+            return _notificationsQueue.FirstOrDefault(notification => notification.Id == toastId);
+        }
 
         /// <summary>
         /// Removes all pending notifications from the queue.
@@ -75,6 +93,19 @@ namespace Deezer.WindowsPhone.UI
         {
             Debugger.Break();
             throw new NotImplementedException();
+        }
+
+        private void ShowNextNotification()
+        {
+            lock (_notificationQueueLock)
+            {
+                CurrentNotification = _notificationsQueue.FirstOrDefault();
+                
+                if(CurrentNotification == null)
+                    return;
+
+                CurrentNotification.Show(this);
+            } 
         }
 
         private void InternalAddToQueue(ToastNotificationBase toastNotification)
@@ -96,11 +127,6 @@ namespace Deezer.WindowsPhone.UI
                 _notificationsQueue.Remove(actualNotification);
                 _notificationsQueue.Insert(actualNotificationIndex, toastNotification);
             }
-        }
-
-        public ToastNotificationBase GetToastById(string toastId)
-        {
-            return _notificationsQueue.FirstOrDefault(notification => notification.Id == toastId);
         }
     }
 }
