@@ -3,10 +3,12 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
+using Microsoft.Phone.Reactive;
 
 namespace Deezer.WindowsPhone.UI
 {
@@ -17,6 +19,7 @@ namespace Deezer.WindowsPhone.UI
         private TranslateTransform _translate;
         private DispatcherTimer _dismissTimer;
         private ToastNotificationManager _toastNotificationManager;
+        private double _toastShowDuration = 4000;
 
         protected const string SwivelInStoryboard =
             @"<Storyboard xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation"">
@@ -58,7 +61,12 @@ namespace Deezer.WindowsPhone.UI
 
         public string Id { get; set; }
         public Brush BackgroundBrush { get; set; }
-        public double ToastShowDuration { get; set; }
+
+        public double ToastShowDuration
+        {
+            get { return _toastShowDuration; }
+            set { _toastShowDuration = value; }
+        }
 
         public void Show(ToastNotificationManager toastNotificationManager)
         {
@@ -88,26 +96,30 @@ namespace Deezer.WindowsPhone.UI
             _toastControlMainBorder.VerticalAlignment = VerticalAlignment.Top;
             _toastControlMainBorder.Tap += OnToastBorderTapped;
 
+            _toastControlMainBorder.Child = GetNotificationContent();
+
             // TODO: Show the entry storyboard
             // Loading the display storyboard
-            //Storyboard enteringStoryboard = XamlReader.Load(SwivelInStoryboard) as Storyboard;
-            //_toastControlMainBorder.Projection = new PlaneProjection();
+            Storyboard enteringStoryboard = XamlReader.Load(SwivelInStoryboard) as Storyboard;
+            _toastControlMainBorder.Projection = new PlaneProjection();
 
-            //Deployment.Current.Dispatcher.BeginInvoke(() =>
-            //{
-            //    ParentControl.Children.Add(_toastControlMainBorder);
-            //    foreach (Timeline t in enteringStoryboard.Children)
-            //    {
-            //        Storyboard.SetTarget(t, _toastControlMainBorder);
-            //    }
-            //    enteringStoryboard.Begin();
-            //});
+            Deployment.Current.Dispatcher.BeginInvoke(() =>
+            {
+                _toastNotificationManager.RootGrid.Children.Add(_toastControlMainBorder);
+                foreach (Timeline t in enteringStoryboard.Children)
+                {
+                    Storyboard.SetTarget(t, _toastControlMainBorder);
+                }
+                enteringStoryboard.Begin();
+            });
 
             _dismissTimer = new DispatcherTimer();
             _dismissTimer.Interval = TimeSpan.FromMilliseconds(ToastShowDuration);
             _dismissTimer.Tick += OnDismissTimerTicked;
             _dismissTimer.Start();
         }
+
+        protected abstract ContentPresenter GetNotificationContent();
 
         private void OnDismissTimerTicked(object sender, EventArgs e)
         {
@@ -146,8 +158,7 @@ namespace Deezer.WindowsPhone.UI
 
         private void RaiseToastDismissed()
         {
-            throw new NotImplementedException();
-            //TODO: Call _toastNotificationManager.CompleteToast();
+            _toastNotificationManager.CompleteToast(this);
         }
 
         private void OnToastBorderTapped(object sender, GestureEventArgs e)

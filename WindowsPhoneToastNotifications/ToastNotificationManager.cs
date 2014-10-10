@@ -72,8 +72,12 @@ namespace Deezer.WindowsPhone.UI
         /// <param name="toastNotification">The <see cref="ToastNotificationBase"/> to remove.</param>
         public void Dequeue(ToastNotificationBase toastNotification)
         {
-            Debugger.Break();
-            throw new NotImplementedException();
+            // TODO: If notification is actually displayed, dismiss it.
+
+            lock (_notificationQueueLock)
+            {
+                _notificationsQueue.Remove(toastNotification);
+            }
         }
 
         /// <summary>
@@ -127,6 +131,13 @@ namespace Deezer.WindowsPhone.UI
                 _notificationsQueue.Remove(actualNotification);
                 _notificationsQueue.Insert(actualNotificationIndex, toastNotification);
             }
+        }
+
+        public void CompleteToast(ToastNotificationBase toastNotificationBase)
+        {
+            Dequeue(toastNotificationBase);
+            CurrentNotification = null;
+            ShowNextNotification();
         }
     }
 }

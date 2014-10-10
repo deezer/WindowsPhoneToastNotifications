@@ -8,6 +8,19 @@
     <!--Application Resources-->
     <Application.Resources>
         <local:LocalizedStrings xmlns:local="clr-namespace:WindowsPhoneToastNotifications.Demo" x:Key="LocalizedStrings"/>
+        <DataTemplate x:Key="SimpleToastNotificationContentTemplate">
+            <StackPanel Orientation="Horizontal"
+                        VerticalAlignment="Bottom"
+                        Margin="24,36,24,12">
+                <TextBlock VerticalAlignment="Bottom"
+                           TextTrimming="WordEllipsis"
+                           Foreground="White">
+                    <Run FontWeight="Bold"
+                         Text="{Binding Title}" />
+                    <Run Text="{Binding Content}" />
+                </TextBlock>
+            </StackPanel>
+        </DataTemplate>
     </Application.Resources>
 
     <Application.ApplicationLifetimeObjects>
