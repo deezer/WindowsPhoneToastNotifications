@@ -131,15 +131,19 @@ namespace Deezer.WindowsPhone.UI
             DismissToast(_toastControlMainBorder, false);
         }
 
-        private void DismissToast(Border toastControlMainBorder, bool b)
+        private void DismissToast(Border toastControlMainBorder, bool hasBeenDismissed, bool continueGestureAnimation = false)
         {
             _toastControlMainBorder.ManipulationStarted -= OnMainBorderManipulationStarted;
             _toastControlMainBorder.ManipulationDelta -= OnMainBorderManipulationDelta;
             _toastControlMainBorder.ManipulationCompleted -= OnMainBorderManipulationCompleted;
-
-            Storyboard leavingStoryboard = XamlReader.Load(SwivelOutStoryboard) as Storyboard;
+            
+            Storyboard leavingStoryboard;
+           
+            leavingStoryboard = XamlReader.Load(SwivelOutStoryboard) as Storyboard;
+            
             Deployment.Current.Dispatcher.BeginInvoke(() =>
             {
+
                 foreach (Timeline t in leavingStoryboard.Children)
                 {
                     Storyboard.SetTarget(t, _toastControlMainBorder);
@@ -150,6 +154,7 @@ namespace Deezer.WindowsPhone.UI
                 {
                     _toastNotificationManager.RootGrid.Children.Remove(_toastControlMainBorder);
                     RaiseToastDismissed();
+                    // TODO: handle HasBeenDismissed
                 };
             });
 
@@ -187,12 +192,13 @@ namespace Deezer.WindowsPhone.UI
                 _translate.X = 0;
             }
         }
+
         private void OnMainBorderManipulationCompleted(object sender, ManipulationCompletedEventArgs e)
         {
             e.Handled = true;
             if (e.TotalManipulation.Translation.X > 200 || e.FinalVelocities.LinearVelocity.X > 1000)
             {
-                DismissToast(_toastControlMainBorder, false);
+                DismissToast(_toastControlMainBorder, false, true);
             }
             else if (e.TotalManipulation.Translation.X > -10 && e.TotalManipulation.Translation.X < 10)
             {

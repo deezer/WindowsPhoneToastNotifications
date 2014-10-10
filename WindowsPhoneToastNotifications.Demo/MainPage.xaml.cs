@@ -58,14 +58,5 @@ namespace WindowsPhoneToastNotifications.Demo
             simpleToastNotification.BackgroundBrush = new SolidColorBrush(Color.FromArgb(0xff, 0x34, 0x64, 0x91));
             _notificationManager.Enqueue(simpleToastNotification);
         }
-
-        private void OnSimpleTitleIconToastButtonTapped(object sender, GestureEventArgs e)
-        {
-            SimpleToastNotification simpleToastNotification = new SimpleToastNotification();
-            simpleToastNotification.Title = "Now Playing";
-            simpleToastNotification.Content = "Katy Perry ! " + DateTime.UtcNow.ToString("T");
-            simpleToastNotification.BackgroundBrush = new SolidColorBrush(Color.FromArgb(0xff, 0x34, 0x64, 0x91));
-            _notificationManager.Enqueue(simpleToastNotification);
-        }
     }
 }

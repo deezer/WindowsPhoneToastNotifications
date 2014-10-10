@@ -27,9 +27,8 @@
 
         <StackPanel x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
             <Button Content="Show simple text toast" Tap="OnSimpleTextToastButtonTapped" />
-            <Button Content="Show simple text /w title toast" Tap="OnSimpleTitleToastButtonTapped" />
-            <Button Content="Show simple text /w title &amp; icon toast"
-                    Tap="OnSimpleTitleIconToastButtonTapped" />
+            <Button Content="Show simple text /w title toast"
+                    Tap="OnSimpleTitleToastButtonTapped" />
         </StackPanel>
 
     </Grid>
