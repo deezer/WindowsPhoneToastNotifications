@@ -61,11 +61,12 @@ namespace Deezer.WindowsPhone.UI
         protected const string SlideOutStoryboard =
            @"<Storyboard xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation"">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty=""(UIElement.Opacity)"">
-                <DiscreteDoubleKeyFrame KeyTime=""0"" Value=""1"" />
-                <DiscreteDoubleKeyFrame KeyTime=""0:0:1.500"" Value=""0"" />
+                <EasingDoubleKeyFrame KeyTime=""0"" Value=""1"" />
+                <EasingDoubleKeyFrame KeyTime=""0:0:0.267"" Value=""0"" />
             </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimation Duration=""0:0:0.267"" To=""480"" Storyboard.TargetProperty=""(UIElement.RenderTransform).(TranslateTransform.X)"">
+            </DoubleAnimation >
         </Storyboard>";
-
 
         public string Id { get; set; }
         public Brush BackgroundBrush { get; set; }
@@ -161,6 +162,12 @@ namespace Deezer.WindowsPhone.UI
                 {
                     Storyboard.SetTarget(t, _toastControlMainBorder);
                 }
+
+                //if (continueGestureAnimation)
+                //{
+                //    _toastControlMainBorder.RenderTransformOrigin = new Point(0.5, 0.5);   
+                //    _toastControlMainBorder.RenderTransform = new TranslateTransform();
+                //}
 
                 leavingStoryboard.Begin();
                 leavingStoryboard.Completed += delegate
