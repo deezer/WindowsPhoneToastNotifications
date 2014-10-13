@@ -84,5 +84,14 @@ namespace WindowsPhoneToastNotifications.Demo
             bool result = await simpleToastNotification.EnqueueAndShow(_notificationManager);
             MessageBox.Show("Toast has been dismissed: " + result);
         }
+
+        private void OnCustomToastButtonTapped(object sender, GestureEventArgs e)
+        {
+            CustomToastNotification customToastNotification = new CustomToastNotification();
+            customToastNotification.BackgroundBrush = new SolidColorBrush(Color.FromArgb(0xff, 0x2B, 0xCA, 0xB2));
+            customToastNotification.ContentTemplate = App.Current.Resources["AlbumToastNotificationContentTemplate"] as DataTemplate;
+            customToastNotification.Content = new { Title = "Unconditionally", ArtistName = "Katy Perry", PictureUri = new Uri("http://api.deezer.com/artist/144227/image") };
+            _notificationManager.Enqueue(customToastNotification);
+        }
     }
 }

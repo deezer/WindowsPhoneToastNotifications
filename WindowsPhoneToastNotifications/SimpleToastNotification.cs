@@ -29,7 +29,7 @@ namespace Deezer.WindowsPhone.UI
 
             contentControl.ContentTemplate = ContentTemplate;
             contentControl.OnApplyTemplate();
-            contentControl.Content = new {Title, Content };
+            contentControl.Content = new { Title, Content };
             return contentControl;
         }
     }

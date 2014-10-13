@@ -21,6 +21,34 @@
                 </TextBlock>
             </StackPanel>
         </DataTemplate>
+
+        <DataTemplate x:Key="AlbumToastNotificationContentTemplate">
+            <Grid Background="#2BCAB2"
+                  Margin="24,36,24,12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="84" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Margin="0,0,12,0"
+                            VerticalAlignment="Center">
+                    <TextBlock Text="ON AIR"
+                               FontSize="{StaticResource PhoneFontSizeMedium}" />
+                    <TextBlock TextTrimming="WordEllipsis">
+                <Run Text="{Binding Title}"
+                        FontWeight="SemiBold" />
+                <Run Text="by"
+                        FontSize="{StaticResource PhoneFontSizeMedium}" />
+                <Run Text="{Binding ArtistName}" />
+                    </TextBlock>
+                </StackPanel>
+
+                <Image Grid.Column="1"
+                       Margin="0,0,12,0"
+                       Source="{Binding PictureUri}">
+                </Image>
+            </Grid>
+        </DataTemplate>
     </Application.Resources>
 
     <Application.ApplicationLifetimeObjects>

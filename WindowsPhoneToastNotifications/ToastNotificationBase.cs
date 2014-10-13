@@ -71,6 +71,7 @@ namespace Deezer.WindowsPhone.UI
         </Storyboard>";
 
         public string Id { get; set; }
+
         public Brush BackgroundBrush { get; set; }
 
         public double ToastShowDuration
