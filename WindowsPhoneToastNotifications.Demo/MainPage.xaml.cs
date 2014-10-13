@@ -58,5 +58,23 @@ namespace WindowsPhoneToastNotifications.Demo
             simpleToastNotification.BackgroundBrush = new SolidColorBrush(Color.FromArgb(0xff, 0x34, 0x64, 0x91));
             _notificationManager.Enqueue(simpleToastNotification);
         }
+
+        private void OnToastResultButtonTapped(object sender, GestureEventArgs e)
+        {
+            SimpleToastNotification simpleToastNotification = new SimpleToastNotification();
+            simpleToastNotification.Title = "Do you want to tap me ?";
+            simpleToastNotification.Completed += OnSimpleToastResultTapped;
+            _notificationManager.Enqueue(simpleToastNotification);
+        }
+
+        private void OnSimpleToastResultTapped(object sender, ToastCompletedEventArgs e)
+        {
+            SimpleToastNotification simpleToastNotification = sender as SimpleToastNotification;
+            if (simpleToastNotification == null)
+                return;
+
+            simpleToastNotification.Completed -= OnSimpleToastResultTapped;
+            MessageBox.Show("Toast has been dismissed: " + e.HasBeenDismissed);
+        }
     }
 }

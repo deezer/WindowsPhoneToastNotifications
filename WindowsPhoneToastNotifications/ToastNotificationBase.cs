@@ -77,6 +77,8 @@ namespace Deezer.WindowsPhone.UI
             set { _toastShowDuration = value; }
         }
 
+        public event EventHandler<ToastCompletedEventArgs> Completed;
+
         public void Show(ToastNotificationManager toastNotificationManager)
         {
             if(toastNotificationManager == null)
@@ -90,6 +92,7 @@ namespace Deezer.WindowsPhone.UI
             _toastControlMainBorder.ManipulationStarted += OnMainBorderManipulationStarted;
             _toastControlMainBorder.ManipulationDelta += OnMainBorderManipulationDelta;
             _toastControlMainBorder.ManipulationCompleted += OnMainBorderManipulationCompleted;
+
             // Setting the background brush (from property or default)
             if (BackgroundBrush != null)
             {
@@ -107,7 +110,6 @@ namespace Deezer.WindowsPhone.UI
 
             _toastControlMainBorder.Child = GetNotificationContent();
 
-            // TODO: Show the entry storyboard
             // Loading the display storyboard
             Storyboard enteringStoryboard = XamlReader.Load(SwivelInStoryboard) as Storyboard;
             _toastControlMainBorder.Projection = new PlaneProjection();
@@ -130,6 +132,12 @@ namespace Deezer.WindowsPhone.UI
 
         protected abstract ContentPresenter GetNotificationContent();
 
+        protected virtual void RaiseCompleted(ToastCompletedEventArgs e)
+        {
+            EventHandler<ToastCompletedEventArgs> handler = Completed;
+            if (handler != null) handler(this, e);
+        }
+
         private void OnDismissTimerTicked(object sender, EventArgs e)
         {
             if (_dismissTimer != null)
@@ -137,10 +145,10 @@ namespace Deezer.WindowsPhone.UI
                 _dismissTimer.Tick -= OnDismissTimerTicked;
                 _dismissTimer.Stop();
             }
-            DismissToast(_toastControlMainBorder, false);
+            DismissToast(true);
         }
 
-        private void DismissToast(Border toastControlMainBorder, bool hasBeenDismissed, bool continueGestureAnimation = false)
+        private void DismissToast(bool hasBeenDismissed, bool continueGestureAnimation = false)
         {
             _toastControlMainBorder.ManipulationStarted -= OnMainBorderManipulationStarted;
             _toastControlMainBorder.ManipulationDelta -= OnMainBorderManipulationDelta;
@@ -163,27 +171,21 @@ namespace Deezer.WindowsPhone.UI
                     Storyboard.SetTarget(t, _toastControlMainBorder);
                 }
 
-                //if (continueGestureAnimation)
-                //{
-                //    _toastControlMainBorder.RenderTransformOrigin = new Point(0.5, 0.5);   
-                //    _toastControlMainBorder.RenderTransform = new TranslateTransform();
-                //}
-
                 leavingStoryboard.Begin();
                 leavingStoryboard.Completed += delegate
                 {
                     _toastNotificationManager.RootGrid.Children.Remove(_toastControlMainBorder);
-                    RaiseToastDismissed();
-                    // TODO: handle HasBeenDismissed
+                    CompleteToast(hasBeenDismissed);
                 };
             });
 
             _dismissTimer = null;
         }
 
-        private void RaiseToastDismissed()
+        private void CompleteToast(bool hasBeenDismissed)
         {
             _toastNotificationManager.CompleteToast(this);
+            RaiseCompleted(new ToastCompletedEventArgs(hasBeenDismissed));
         }
 
         private void OnToastBorderTapped(object sender, GestureEventArgs e)
@@ -193,7 +195,7 @@ namespace Deezer.WindowsPhone.UI
                 return;
 
             toastBorder.Tap -= OnToastBorderTapped;
-            DismissToast(toastBorder, true);
+            DismissToast(false);
         }
 
         private void OnMainBorderManipulationStarted(object sender, ManipulationStartedEventArgs e)
@@ -218,11 +220,11 @@ namespace Deezer.WindowsPhone.UI
             e.Handled = true;
             if (e.TotalManipulation.Translation.X > 200 || e.FinalVelocities.LinearVelocity.X > 1000)
             {
-                DismissToast(_toastControlMainBorder, false, true);
+                DismissToast(true, true);
             }
             else if (e.TotalManipulation.Translation.X > -10 && e.TotalManipulation.Translation.X < 10)
             {
-                DismissToast(_toastControlMainBorder, true);
+                DismissToast(false);
             }
             else
             {

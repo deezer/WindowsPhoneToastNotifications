@@ -84,6 +84,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="SimpleToastNotification.cs" />
+    <Compile Include="ToastCompletedEventArgs.cs" />
     <Compile Include="ToastNotificationBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ToastNotificationManager.cs" />

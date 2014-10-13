@@ -29,6 +29,7 @@
             <Button Content="Show simple text toast" Tap="OnSimpleTextToastButtonTapped" />
             <Button Content="Show simple text /w title toast"
                     Tap="OnSimpleTitleToastButtonTapped" />
+            <Button Content="Toast result" Tap="OnToastResultButtonTapped" />
         </StackPanel>
 
     </Grid>
