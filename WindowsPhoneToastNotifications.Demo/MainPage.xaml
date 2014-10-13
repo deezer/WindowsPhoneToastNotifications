@@ -32,6 +32,9 @@
             <Button Content="Toast result" Tap="OnToastResultButtonTapped" />
             <Button Content="Show simple text toast (async)" Tap="OnSimpleAsyncTextToastButtonTapped" />
             <Button Content="Show custom text toast" Tap="OnCustomToastButtonTapped" />
+            <Button Content="Swipe notifiation - Step 1" Tap="OnSwipeNotificationStep1ButtonTapped" />
+            <Button Content="Swipe notifiation - Step 2"
+                    Tap="OnSwipeNotificationStep2ButtonTapped" />
         </StackPanel>
 
     </Grid>

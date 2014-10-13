@@ -93,5 +93,22 @@ namespace WindowsPhoneToastNotifications.Demo
             customToastNotification.Content = new { Title = "Unconditionally", ArtistName = "Katy Perry", PictureUri = new Uri("http://api.deezer.com/artist/144227/image") };
             _notificationManager.Enqueue(customToastNotification);
         }
+
+        private async void OnSwipeNotificationStep1ButtonTapped(object sender, GestureEventArgs e)
+        {
+            SimpleToastNotification simpleToastNotification = new SimpleToastNotification();
+            simpleToastNotification.Title = "PRISM has been added to favorites";
+            simpleToastNotification.Id = "album.favoritestatus.27493";
+            bool result = await simpleToastNotification.EnqueueAndShow(_notificationManager);
+        }
+
+        private async void OnSwipeNotificationStep2ButtonTapped(object sender, GestureEventArgs e)
+        {
+            SimpleToastNotification simpleToastNotification = new SimpleToastNotification();
+            simpleToastNotification.Title = "PRISM has been removed to favorites";
+            simpleToastNotification.Id = "album.favoritestatus.27493";
+            bool result = await simpleToastNotification.EnqueueAndShow(_notificationManager);
+            
+        }
     }
 }

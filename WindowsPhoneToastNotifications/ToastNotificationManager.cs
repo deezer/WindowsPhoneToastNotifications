@@ -46,7 +46,12 @@ namespace Deezer.WindowsPhone.UI
         public void Enqueue(ToastNotificationBase toastNotification)
         {
             // If the toastNotification is on screen, replace datacontext
-            // TODO: Implement live notification swapping
+            if (CurrentNotification != null && CurrentNotification.Id == toastNotification.Id)
+            {
+                SwipeCurrentNotification(toastNotification);
+                return;
+            }
+
             
             // else-if notification is on queue, replace existing instance
             if (_notificationsQueue.Any(notification => notification.Id == toastNotification.Id && notification.Id != null))
@@ -59,11 +64,22 @@ namespace Deezer.WindowsPhone.UI
                 InternalAddToQueue(toastNotification);
             }
             
-            // TODO: Process queue
             if (CurrentNotification == null)
             {
                 ShowNextNotification();
             }
+        }
+
+        private void SwipeCurrentNotification(ToastNotificationBase toastNotification)
+        {
+            lock (_notificationQueueLock)
+            {
+                CurrentNotification.AbortNotification();
+                CurrentNotification.CompleteToast(true, notifyManager: false);
+                _notificationsQueue.Remove(CurrentNotification);
+                CurrentNotification = toastNotification;
+                CurrentNotification.Show(this);
+            } 
         }
 
         /// <summary>
@@ -72,7 +88,10 @@ namespace Deezer.WindowsPhone.UI
         /// <param name="toastNotification">The <see cref="ToastNotificationBase"/> to remove.</param>
         public void Dequeue(ToastNotificationBase toastNotification)
         {
-            // TODO: If notification is actually displayed, dismiss it.
+            if (CurrentNotification == toastNotification)
+            {
+                toastNotification.CompleteToast(true);
+            }
 
             lock (_notificationQueueLock)
             {
@@ -137,8 +156,8 @@ namespace Deezer.WindowsPhone.UI
 
         public void CompleteToast(ToastNotificationBase toastNotificationBase)
         {
-            Dequeue(toastNotificationBase);
             CurrentNotification = null;
+            Dequeue(toastNotificationBase);
             ShowNextNotification();
         }
     }

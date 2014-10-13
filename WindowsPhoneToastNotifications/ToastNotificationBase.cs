@@ -151,6 +151,15 @@ namespace Deezer.WindowsPhone.UI
             _dismissTimer.Start();
         }
 
+        internal void AbortNotification()
+        {
+            _dismissTimer.Stop();
+            Deployment.Current.Dispatcher.BeginInvoke(() =>
+            {
+                _toastNotificationManager.RootGrid.Children.Remove(_toastControlMainBorder);
+            });
+        }
+
         protected abstract ContentPresenter GetNotificationContent();
 
         protected virtual void RaiseCompleted(ToastCompletedEventArgs e)
@@ -203,9 +212,12 @@ namespace Deezer.WindowsPhone.UI
             _dismissTimer = null;
         }
 
-        internal void CompleteToast(bool hasBeenDismissed)
+        internal void CompleteToast(bool hasBeenDismissed, bool notifyManager = true)
         {
-            _toastNotificationManager.CompleteToast(this);
+            if (notifyManager)
+            {
+                _toastNotificationManager.CompleteToast(this);
+            }
             RaiseCompleted(new ToastCompletedEventArgs(hasBeenDismissed));
         }
 
