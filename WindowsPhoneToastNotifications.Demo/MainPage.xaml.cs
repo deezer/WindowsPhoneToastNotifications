@@ -76,5 +76,13 @@ namespace WindowsPhoneToastNotifications.Demo
             simpleToastNotification.Completed -= OnSimpleToastResultTapped;
             MessageBox.Show("Toast has been dismissed: " + e.HasBeenDismissed);
         }
+
+        private async void OnSimpleAsyncTextToastButtonTapped(object sender, GestureEventArgs e)
+        {
+            SimpleToastNotification simpleToastNotification = new SimpleToastNotification();
+            simpleToastNotification.Title = "Do you want to tap me async ?";
+            bool result = await simpleToastNotification.EnqueueAndShow(_notificationManager);
+            MessageBox.Show("Toast has been dismissed: " + result);
+        }
     }
 }

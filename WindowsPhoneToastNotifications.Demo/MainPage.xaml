@@ -30,6 +30,7 @@
             <Button Content="Show simple text /w title toast"
                     Tap="OnSimpleTitleToastButtonTapped" />
             <Button Content="Toast result" Tap="OnToastResultButtonTapped" />
+            <Button Content="Show simple text toast (async)" Tap="OnSimpleAsyncTextToastButtonTapped" />
         </StackPanel>
 
     </Grid>

@@ -127,7 +127,9 @@ namespace Deezer.WindowsPhone.UI
                 ToastNotificationBase actualNotification = _notificationsQueue.FirstOrDefault(notification => notification.Id == toastNotification.Id && notification.Id != null);
                 if (actualNotification == null) throw new ArgumentNullException("actualNotification");
 
-                var actualNotificationIndex = _notificationsQueue.IndexOf(actualNotification);
+                actualNotification.CompleteToast(hasBeenDismissed: true);
+
+                int actualNotificationIndex = _notificationsQueue.IndexOf(actualNotification);
                 _notificationsQueue.Remove(actualNotification);
                 _notificationsQueue.Insert(actualNotificationIndex, toastNotification);
             }

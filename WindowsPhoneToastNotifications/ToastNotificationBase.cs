@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -20,6 +21,7 @@ namespace Deezer.WindowsPhone.UI
         private DispatcherTimer _dismissTimer;
         private ToastNotificationManager _toastNotificationManager;
         private double _toastShowDuration = 4000;
+        private TaskCompletionSource<bool> _showAsyncTaskCompletionSource;
 
         protected const string SwivelInStoryboard =
             @"<Storyboard xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation"">
@@ -78,6 +80,24 @@ namespace Deezer.WindowsPhone.UI
         }
 
         public event EventHandler<ToastCompletedEventArgs> Completed;
+
+        public Task<bool> EnqueueAndShow(ToastNotificationManager manager)
+        {
+            if(manager == null)
+                throw new ArgumentNullException("manager");
+
+            _showAsyncTaskCompletionSource = new TaskCompletionSource<bool>();
+            Completed += OnAsyncToastCompleted;
+            manager.Enqueue(this);
+
+            return _showAsyncTaskCompletionSource.Task;
+        }
+
+        private void OnAsyncToastCompleted(object sender, ToastCompletedEventArgs e)
+        {
+            this.Completed -= OnAsyncToastCompleted;
+            _showAsyncTaskCompletionSource.TrySetResult(e.HasBeenDismissed);
+        }
 
         public void Show(ToastNotificationManager toastNotificationManager)
         {
@@ -182,7 +202,7 @@ namespace Deezer.WindowsPhone.UI
             _dismissTimer = null;
         }
 
-        private void CompleteToast(bool hasBeenDismissed)
+        internal void CompleteToast(bool hasBeenDismissed)
         {
             _toastNotificationManager.CompleteToast(this);
             RaiseCompleted(new ToastCompletedEventArgs(hasBeenDismissed));
