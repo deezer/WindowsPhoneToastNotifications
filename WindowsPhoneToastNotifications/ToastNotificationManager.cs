@@ -34,7 +34,6 @@ namespace Deezer.WindowsPhone.UI
                 throw new ArgumentNullException("rootGrid");
 
             RootGrid = rootGrid;
-            RootGrid.Children.Add(new TextBlock());
             _notificationsQueue = new List<ToastNotificationBase>();
         }
 
