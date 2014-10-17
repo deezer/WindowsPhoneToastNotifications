@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 
 namespace Deezer.WindowsPhone.UI
 {
@@ -50,7 +47,6 @@ namespace Deezer.WindowsPhone.UI
                 SwipeCurrentNotification(toastNotification);
                 return;
             }
-
             
             // else-if notification is on queue, replace existing instance
             if (_notificationsQueue.Any(notification => notification.Id == toastNotification.Id && notification.Id != null))
