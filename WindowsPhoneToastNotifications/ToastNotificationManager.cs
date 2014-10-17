@@ -113,8 +113,16 @@ namespace Deezer.WindowsPhone.UI
         /// </summary>
         public void Clear()
         {
-            Debugger.Break();
-            throw new NotImplementedException();
+            lock (_notificationQueueLock)
+            {
+                _notificationsQueue.Clear();
+
+                if (CurrentNotification == null)
+                    return;
+
+                CurrentNotification.CompleteToast(hasBeenDismissed: true);
+                CurrentNotification = null;
+            } 
         }
 
         private void ShowNextNotification()
