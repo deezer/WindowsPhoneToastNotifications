@@ -23,6 +23,7 @@ namespace Deezer.WindowsPhone.UI
         private double _toastShowDuration = 4000;
         private TaskCompletionSource<bool> _showAsyncTaskCompletionSource;
 
+	// This storyboard source is from http://blogs.claritycon.com/blog/2010/10/wp7-page-transitions-sample/
         protected const string SwivelInStoryboard =
             @"<Storyboard xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation"">
             <DoubleAnimation 
