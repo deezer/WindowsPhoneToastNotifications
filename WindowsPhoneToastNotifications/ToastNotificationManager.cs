@@ -7,16 +7,15 @@ namespace Deezer.WindowsPhone.UI
 {
     public class ToastNotificationManager
     {
-        private List<ToastNotificationBase> _notificationsQueue;
-        private object _notificationQueueLock = new object();
-        private Border _toastControlMainBorder;
+        private readonly List<ToastNotificationBase> _notificationsQueue;
+        private readonly object _notificationQueueLock = new object();
 
         public IReadOnlyList<ToastNotificationBase> QueuedNotifications
         {
             get { return _notificationsQueue; }
         }
 
-        public Grid RootGrid { get; protected set; }
+        protected Grid RootGrid { get; set; }
 
         public ToastNotificationBase CurrentNotification { get; protected set; }
 
@@ -27,7 +26,7 @@ namespace Deezer.WindowsPhone.UI
         /// <exception cref="System.ArgumentNullException">rootGrid</exception>
         public ToastNotificationManager(Grid rootGrid)
         {
-            if(rootGrid == null)
+            if (rootGrid == null)
                 throw new ArgumentNullException("rootGrid");
 
             RootGrid = rootGrid;
@@ -47,7 +46,8 @@ namespace Deezer.WindowsPhone.UI
                 SwipeCurrentNotification(toastNotification);
                 return;
             }
-            
+
+
             // else-if notification is on queue, replace existing instance
             if (_notificationsQueue.Any(notification => notification.Id == toastNotification.Id && notification.Id != null))
             {
@@ -58,7 +58,7 @@ namespace Deezer.WindowsPhone.UI
                 // else add to queue
                 InternalAddToQueue(toastNotification);
             }
-            
+
             if (CurrentNotification == null)
             {
                 ShowNextNotification();
@@ -74,7 +74,7 @@ namespace Deezer.WindowsPhone.UI
                 _notificationsQueue.Remove(CurrentNotification);
                 CurrentNotification = toastNotification;
                 CurrentNotification.Show(this);
-            } 
+            }
         }
 
         /// <summary>
@@ -109,16 +109,29 @@ namespace Deezer.WindowsPhone.UI
         /// </summary>
         public void Clear()
         {
-            lock (_notificationQueueLock)
-            {
-                _notificationsQueue.Clear();
+            throw new NotImplementedException();
+        }
 
-                if (CurrentNotification == null)
-                    return;
+        internal void AddNotificiationToVisualTree(ToastNotificationBase toastNotificationBase)
+        {
+             if(toastNotificationBase == null)
+                 throw new ArgumentNullException("toastNotificationBase");
 
-                CurrentNotification.CompleteToast(hasBeenDismissed: true);
-                CurrentNotification = null;
-            } 
+            if(toastNotificationBase.ToastControlMainBorder == null)
+                throw new ArgumentNullException("toastNotificationBase", "ToastNotificationBase object must contain a ToastControlMainBorder");
+
+            RootGrid.Children.Add(toastNotificationBase.ToastControlMainBorder);
+        }
+
+        internal void RemoveNotificationFromVisualTree(ToastNotificationBase toastNotificationBase)
+        {
+            if (toastNotificationBase == null)
+                throw new ArgumentNullException("toastNotificationBase");
+
+            if (toastNotificationBase.ToastControlMainBorder == null)
+                throw new ArgumentNullException("toastNotificationBase", "ToastNotificationBase object must contain a ToastControlMainBorder");
+
+            RootGrid.Children.Remove(toastNotificationBase.ToastControlMainBorder);
         }
 
         private void ShowNextNotification()
@@ -126,12 +139,12 @@ namespace Deezer.WindowsPhone.UI
             lock (_notificationQueueLock)
             {
                 CurrentNotification = _notificationsQueue.FirstOrDefault();
-                
-                if(CurrentNotification == null)
+
+                if (CurrentNotification == null)
                     return;
 
                 CurrentNotification.Show(this);
-            } 
+            }
         }
 
         private void InternalAddToQueue(ToastNotificationBase toastNotification)

@@ -4,19 +4,16 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Interop;
 using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
-using Microsoft.Phone.Reactive;
 
 namespace Deezer.WindowsPhone.UI
 {
     [DebuggerDisplay("ToastNotificationBase({Id})")]
     public abstract class ToastNotificationBase
     {
-        private Border _toastControlMainBorder;
         private TranslateTransform _translate;
         private DispatcherTimer _dismissTimer;
         private ToastNotificationManager _toastNotificationManager;
@@ -81,6 +78,8 @@ namespace Deezer.WindowsPhone.UI
             set { _toastShowDuration = value; }
         }
 
+        internal Border ToastControlMainBorder { get; set; }
+
         public event EventHandler<ToastCompletedEventArgs> Completed;
 
         public Task<bool> EnqueueAndShow(ToastNotificationManager manager)
@@ -108,40 +107,40 @@ namespace Deezer.WindowsPhone.UI
 
             _toastNotificationManager = toastNotificationManager;
 
-            _toastControlMainBorder = new Border();
+            ToastControlMainBorder = new Border();
             _translate = new TranslateTransform();
-            _toastControlMainBorder.RenderTransform = _translate;
-            _toastControlMainBorder.ManipulationStarted += OnMainBorderManipulationStarted;
-            _toastControlMainBorder.ManipulationDelta += OnMainBorderManipulationDelta;
-            _toastControlMainBorder.ManipulationCompleted += OnMainBorderManipulationCompleted;
+            ToastControlMainBorder.RenderTransform = _translate;
+            ToastControlMainBorder.ManipulationStarted += OnMainBorderManipulationStarted;
+            ToastControlMainBorder.ManipulationDelta += OnMainBorderManipulationDelta;
+            ToastControlMainBorder.ManipulationCompleted += OnMainBorderManipulationCompleted;
 
             // Setting the background brush (from property or default)
             if (BackgroundBrush != null)
             {
-                _toastControlMainBorder.Background = BackgroundBrush;
+                ToastControlMainBorder.Background = BackgroundBrush;
             }
             else
             {
                 // This resource (PhoneAccentColor) is provided by the system, and therefore can't be null.
                 Color currentAccentColorHex = (Color)Application.Current.Resources["PhoneAccentColor"];
-                _toastControlMainBorder.Background = new SolidColorBrush(currentAccentColorHex);
+                ToastControlMainBorder.Background = new SolidColorBrush(currentAccentColorHex);
             }
 
-            _toastControlMainBorder.VerticalAlignment = VerticalAlignment.Top;
-            _toastControlMainBorder.Tap += OnToastBorderTapped;
+            ToastControlMainBorder.VerticalAlignment = VerticalAlignment.Top;
+            ToastControlMainBorder.Tap += OnToastBorderTapped;
 
-            _toastControlMainBorder.Child = GetNotificationContent();
+            ToastControlMainBorder.Child = GetNotificationContent();
 
             // Loading the display storyboard
             Storyboard enteringStoryboard = XamlReader.Load(SwivelInStoryboard) as Storyboard;
-            _toastControlMainBorder.Projection = new PlaneProjection();
+            ToastControlMainBorder.Projection = new PlaneProjection();
 
             Deployment.Current.Dispatcher.BeginInvoke(() =>
             {
-                _toastNotificationManager.RootGrid.Children.Add(_toastControlMainBorder);
+                _toastNotificationManager.AddNotificiationToVisualTree(this);;
                 foreach (Timeline t in enteringStoryboard.Children)
                 {
-                    Storyboard.SetTarget(t, _toastControlMainBorder);
+                    Storyboard.SetTarget(t, ToastControlMainBorder);
                 }
                 enteringStoryboard.Begin();
             });
@@ -155,10 +154,7 @@ namespace Deezer.WindowsPhone.UI
         internal void AbortNotification()
         {
             _dismissTimer.Stop();
-            Deployment.Current.Dispatcher.BeginInvoke(() =>
-            {
-                _toastNotificationManager.RootGrid.Children.Remove(_toastControlMainBorder);
-            });
+            Deployment.Current.Dispatcher.BeginInvoke(() => _toastNotificationManager.RemoveNotificationFromVisualTree(this));
         }
 
         protected abstract ContentPresenter GetNotificationContent();
@@ -181,9 +177,9 @@ namespace Deezer.WindowsPhone.UI
 
         private void DismissToast(bool hasBeenDismissed, bool continueGestureAnimation = false)
         {
-            _toastControlMainBorder.ManipulationStarted -= OnMainBorderManipulationStarted;
-            _toastControlMainBorder.ManipulationDelta -= OnMainBorderManipulationDelta;
-            _toastControlMainBorder.ManipulationCompleted -= OnMainBorderManipulationCompleted;
+            ToastControlMainBorder.ManipulationStarted -= OnMainBorderManipulationStarted;
+            ToastControlMainBorder.ManipulationDelta -= OnMainBorderManipulationDelta;
+            ToastControlMainBorder.ManipulationCompleted -= OnMainBorderManipulationCompleted;
             
             Storyboard leavingStoryboard;
             if (continueGestureAnimation)
@@ -199,13 +195,13 @@ namespace Deezer.WindowsPhone.UI
 
                 foreach (Timeline t in leavingStoryboard.Children)
                 {
-                    Storyboard.SetTarget(t, _toastControlMainBorder);
+                    Storyboard.SetTarget(t, ToastControlMainBorder);
                 }
 
                 leavingStoryboard.Begin();
                 leavingStoryboard.Completed += delegate
                 {
-                    _toastNotificationManager.RootGrid.Children.Remove(_toastControlMainBorder);
+                    _toastNotificationManager.RemoveNotificationFromVisualTree(this);
                     CompleteToast(hasBeenDismissed);
                 };
             });
