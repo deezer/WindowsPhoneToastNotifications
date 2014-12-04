@@ -113,6 +113,7 @@ namespace Deezer.WindowsPhone.UI
             ToastControlMainBorder.ManipulationStarted += OnMainBorderManipulationStarted;
             ToastControlMainBorder.ManipulationDelta += OnMainBorderManipulationDelta;
             ToastControlMainBorder.ManipulationCompleted += OnMainBorderManipulationCompleted;
+            ToastControlMainBorder.UseOptimizedManipulationRouting = false;
 
             // Setting the background brush (from property or default)
             if (BackgroundBrush != null)
