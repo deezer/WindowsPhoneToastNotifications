@@ -48,7 +48,7 @@ namespace WindowsPhoneToastNotifications.Demo
                 return;
 
             simpleToastNotification.Completed -= OnSimpleToastResultTapped;
-            MessageBox.Show("Toast has been dismissed: " + e.HasBeenDismissed);
+            MessageBox.Show("Toast has been dismissed: " + e.DismissStatus);
         }
 
         private async void OnSimpleAsyncTextToastButtonTapped(object sender, GestureEventArgs e)

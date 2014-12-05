@@ -4,11 +4,11 @@ namespace Deezer.WindowsPhone.UI
 {
     public class ToastCompletedEventArgs : EventArgs
     {
-        public ToastCompletedEventArgs(DismissStatus hasBeenDismissed)
+        public ToastCompletedEventArgs(DismissStatus dismissStatus)
         {
-            HasBeenDismissed = hasBeenDismissed;
+            DismissStatus = dismissStatus;
         }
 
-        public DismissStatus HasBeenDismissed { get; set; }
+        public DismissStatus DismissStatus { get; set; }
     }
 }

@@ -97,7 +97,7 @@ namespace Deezer.WindowsPhone.UI
         private void OnAsyncToastCompleted(object sender, ToastCompletedEventArgs e)
         {
             this.Completed -= OnAsyncToastCompleted;
-            _showAsyncTaskCompletionSource.TrySetResult(e.HasBeenDismissed);
+            _showAsyncTaskCompletionSource.TrySetResult(e.DismissStatus);
         }
 
         public void Show(ToastNotificationManager toastNotificationManager)
