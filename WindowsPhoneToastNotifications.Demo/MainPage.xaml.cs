@@ -55,7 +55,7 @@ namespace WindowsPhoneToastNotifications.Demo
         {
             SimpleToastNotification simpleToastNotification = new SimpleToastNotification();
             simpleToastNotification.Title = "Do you want to tap me async ?";
-            bool result = await simpleToastNotification.EnqueueAndShow(_notificationManager);
+            DismissStatus result = await simpleToastNotification.EnqueueAndShow(_notificationManager);
             MessageBox.Show("Toast has been dismissed: " + result);
         }
 
@@ -73,7 +73,7 @@ namespace WindowsPhoneToastNotifications.Demo
             SimpleToastNotification simpleToastNotification = new SimpleToastNotification();
             simpleToastNotification.Title = "PRISM has been added to favorites";
             simpleToastNotification.Id = "album.favoritestatus.27493";
-            bool result = await simpleToastNotification.EnqueueAndShow(_notificationManager);
+            DismissStatus result = await simpleToastNotification.EnqueueAndShow(_notificationManager);
         }
 
         private async void OnSwipeNotificationStep2ButtonTapped(object sender, GestureEventArgs e)
@@ -81,7 +81,7 @@ namespace WindowsPhoneToastNotifications.Demo
             SimpleToastNotification simpleToastNotification = new SimpleToastNotification();
             simpleToastNotification.Title = "PRISM has been removed to favorites";
             simpleToastNotification.Id = "album.favoritestatus.27493";
-            bool result = await simpleToastNotification.EnqueueAndShow(_notificationManager);   
+            DismissStatus result = await simpleToastNotification.EnqueueAndShow(_notificationManager);   
         }
     }
 }

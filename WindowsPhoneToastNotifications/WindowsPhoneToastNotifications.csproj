@@ -84,6 +84,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="CustomToastNotification.cs" />
+    <Compile Include="DismissStatus.cs" />
     <Compile Include="SimpleToastNotification.cs" />
     <Compile Include="ToastCompletedEventArgs.cs" />
     <Compile Include="ToastNotificationBase.cs" />

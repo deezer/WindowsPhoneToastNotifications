@@ -18,7 +18,7 @@ namespace Deezer.WindowsPhone.UI
         private DispatcherTimer _dismissTimer;
         private ToastNotificationManager _toastNotificationManager;
         private double _toastShowDuration = 4000;
-        private TaskCompletionSource<bool> _showAsyncTaskCompletionSource;
+        private TaskCompletionSource<DismissStatus> _showAsyncTaskCompletionSource;
 
 	// This storyboard source is from http://blogs.claritycon.com/blog/2010/10/wp7-page-transitions-sample/
         protected const string SwivelInStoryboard =
@@ -82,12 +82,12 @@ namespace Deezer.WindowsPhone.UI
 
         public event EventHandler<ToastCompletedEventArgs> Completed;
 
-        public Task<bool> EnqueueAndShow(ToastNotificationManager manager)
+        public Task<DismissStatus> EnqueueAndShow(ToastNotificationManager manager)
         {
             if(manager == null)
                 throw new ArgumentNullException("manager");
 
-            _showAsyncTaskCompletionSource = new TaskCompletionSource<bool>();
+            _showAsyncTaskCompletionSource = new TaskCompletionSource<DismissStatus>();
             Completed += OnAsyncToastCompleted;
             manager.Enqueue(this);
 
@@ -173,10 +173,10 @@ namespace Deezer.WindowsPhone.UI
                 _dismissTimer.Tick -= OnDismissTimerTicked;
                 _dismissTimer.Stop();
             }
-            DismissToast(true);
+            DismissToast(DismissStatus.TimerDismissed);
         }
 
-        private void DismissToast(bool hasBeenDismissed, bool continueGestureAnimation = false)
+        private void DismissToast(DismissStatus dismissStatus, bool continueGestureAnimation = false)
         {
             ToastControlMainBorder.ManipulationStarted -= OnMainBorderManipulationStarted;
             ToastControlMainBorder.ManipulationDelta -= OnMainBorderManipulationDelta;
@@ -203,20 +203,20 @@ namespace Deezer.WindowsPhone.UI
                 leavingStoryboard.Completed += delegate
                 {
                     _toastNotificationManager.RemoveNotificationFromVisualTree(this);
-                    CompleteToast(hasBeenDismissed);
+                    CompleteToast(dismissStatus);
                 };
             });
 
             _dismissTimer = null;
         }
 
-        internal void CompleteToast(bool hasBeenDismissed, bool notifyManager = true)
+        internal void CompleteToast(DismissStatus dismissStatus, bool notifyManager = true)
         {
             if (notifyManager)
             {
                 _toastNotificationManager.CompleteToast(this);
             }
-            RaiseCompleted(new ToastCompletedEventArgs(hasBeenDismissed));
+            RaiseCompleted(new ToastCompletedEventArgs(dismissStatus));
         }
 
         private void OnToastBorderTapped(object sender, GestureEventArgs e)
@@ -226,7 +226,7 @@ namespace Deezer.WindowsPhone.UI
                 return;
 
             toastBorder.Tap -= OnToastBorderTapped;
-            DismissToast(false);
+            DismissToast(DismissStatus.Tapped);
         }
 
         private void OnMainBorderManipulationStarted(object sender, ManipulationStartedEventArgs e)
@@ -251,11 +251,11 @@ namespace Deezer.WindowsPhone.UI
             e.Handled = true;
             if (e.TotalManipulation.Translation.X > 200 || e.FinalVelocities.LinearVelocity.X > 1000)
             {
-                DismissToast(true, true);
+                DismissToast(DismissStatus.Dismissed, true);
             }
             else if (e.TotalManipulation.Translation.X > -10 && e.TotalManipulation.Translation.X < 10)
             {
-                DismissToast(false);
+                DismissToast(DismissStatus.Tapped);
             }
             else
             {

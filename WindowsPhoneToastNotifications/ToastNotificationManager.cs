@@ -70,7 +70,7 @@ namespace Deezer.WindowsPhone.UI
             lock (_notificationQueueLock)
             {
                 CurrentNotification.AbortNotification();
-                CurrentNotification.CompleteToast(true, notifyManager: false);
+                CurrentNotification.CompleteToast(DismissStatus.Dismissed, notifyManager: false);
                 _notificationsQueue.Remove(CurrentNotification);
                 CurrentNotification = toastNotification;
                 CurrentNotification.Show(this);
@@ -85,7 +85,7 @@ namespace Deezer.WindowsPhone.UI
         {
             if (CurrentNotification == toastNotification)
             {
-                toastNotification.CompleteToast(true);
+                toastNotification.CompleteToast(DismissStatus.InternalDismissed);
             }
 
             lock (_notificationQueueLock)
@@ -162,7 +162,7 @@ namespace Deezer.WindowsPhone.UI
                 ToastNotificationBase actualNotification = _notificationsQueue.FirstOrDefault(notification => notification.Id == toastNotification.Id && notification.Id != null);
                 if (actualNotification == null) throw new ArgumentNullException("actualNotification");
 
-                actualNotification.CompleteToast(hasBeenDismissed: true);
+                actualNotification.CompleteToast(dismissStatus: DismissStatus.InternalDismissed);
 
                 int actualNotificationIndex = _notificationsQueue.IndexOf(actualNotification);
                 _notificationsQueue.Remove(actualNotification);
