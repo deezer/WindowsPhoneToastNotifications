@@ -22,24 +22,6 @@ namespace WindowsPhoneToastNotifications.Test
             // Act & Assert
             Assert.ThrowsException<ArgumentNullException>(() => new ToastNotificationManager(rootGrid));
         }
-
-        [TestMethod]
-        public async Task ToastNotificationManagerTest_Ctor_WithRoot_ShouldBeOk()
-        {
-            await Deployment.Current.Dispatcher.InvokeAsync(() =>
-            {
-                // Arrange
-                Grid rootGrid = new Grid();
-
-                // Act
-                ToastNotificationManager actual = new ToastNotificationManager(rootGrid);
-
-                // Assert
-                Assert.IsNotNull(actual.RootGrid);
-                Assert.AreEqual(rootGrid, actual.RootGrid);
-                return null;
-            });
-        }
         #endregion
 
         [TestMethod]
