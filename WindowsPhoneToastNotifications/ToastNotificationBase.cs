@@ -87,9 +87,10 @@ namespace Deezer.WindowsPhone.UI
             if(manager == null)
                 throw new ArgumentNullException("manager");
 
+            _toastNotificationManager = manager;
             _showAsyncTaskCompletionSource = new TaskCompletionSource<DismissStatus>();
             Completed += OnAsyncToastCompleted;
-            manager.Enqueue(this);
+            _toastNotificationManager.Enqueue(this);
 
             return _showAsyncTaskCompletionSource.Task;
         }
