@@ -1,7 +1,7 @@
 Windows Phone Toast Notifications
 ==============================
 
-[![Build status](https://ci.appveyor.com/api/projects/status/v66r5cb7x9mn5jqw?svg=true
+![Build status](https://ci.appveyor.com/api/projects/status/v66r5cb7x9mn5jqw?svg=true)
 
 Windows Phone Toast Notifications is an InApp notifications system for Windows Phone Silverlight apps. We will port it to Universal apps in the future (protip: you can fork and start the port ;) ) 
 
