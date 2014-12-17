@@ -9,6 +9,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsPhoneToastNotificati
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsPhoneToastNotifications.Demo", "WindowsPhoneToastNotifications.Demo\WindowsPhoneToastNotifications.Demo.csproj", "{4CB73AAD-E044-48C2-A084-341F3B4B8A96}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{8615204A-7843-4D93-92E7-41BE742F41FE}"
+	ProjectSection(SolutionItems) = preProject
+		.tools\NuGet.exe = .tools\NuGet.exe
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
