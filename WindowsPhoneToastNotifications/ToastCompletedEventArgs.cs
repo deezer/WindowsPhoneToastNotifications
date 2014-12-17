@@ -9,6 +9,6 @@ namespace Deezer.WindowsPhone.UI
             DismissStatus = dismissStatus;
         }
 
-        public DismissStatus DismissStatus { get; set; }
+        public DismissStatus DismissStatus { get; private set; }
     }
 }
